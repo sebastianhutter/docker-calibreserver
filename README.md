@@ -7,7 +7,7 @@ The containers behaviour can be influenced with the following environment variab
 - MAX_COVER: The maximal cover size off the ebooks (default: '400x300')
 - USER: username for basic auth (default: empty)
 - PASSWORD: password for basic auth (default: empty)
-- URL_PREFIX: url prefix for the webservice - necessary for reverse proxy setup (default: empty)
+- PREFIX_URL: url prefix for the webservice - necessary for reverse proxy setup (default: empty)
 
 The listening port of the service is always TCP 80.
 
