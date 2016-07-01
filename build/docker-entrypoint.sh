@@ -13,7 +13,9 @@ if [ -n "$USERNAME" ] && [ -n "$PASSWORD" ]; then
 fi
 
 # if the URL_PREFIX is set set it
-[ -n "$URL_PREFIX" ] && CLI_PARAM="${CLI_PARAM} --url-prefix ${URL_PREFIX}"
+[ -n "$PREFIX_URL" ] && CLI_PARAM="${CLI_PARAM} --url-prefix ${PREFIX_URL}"
 
 # start the calibre server
+echo Starting calibre server with this cli parameters:
+echo $CLI_PARAM
 exec /usr/bin/calibre-server $CLI_PARAM
