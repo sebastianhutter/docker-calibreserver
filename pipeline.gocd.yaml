@@ -1,0 +1,32 @@
+pipelines:
+  Build:
+    group: calibreserver
+    label_template: "${repository[:8]}"
+    materials:
+      repository:
+        git: git@github.com:sebastianhutter/docker-calibreserver.git
+    stages:
+      - Build:
+          jobs:
+            build:
+              tasks:
+               - exec:
+                   command: make
+                   arguments:
+                    - build_latest
+               - exec:
+                   command: make
+                   arguments:
+                    - build_commit
+      - Publish:
+          jobs:
+            publish:
+              tasks:
+               - exec:
+                   command: make
+                   arguments:
+                    - push_latest
+               - exec:
+                   command: make
+                   arguments:
+                    - push_commit
