@@ -1,5 +1,5 @@
 pipelines:
-  Build:
+  Build_calibreserver:
     group: calibreserver
     label_template: "${repository[:8]}"
     materials:
