@@ -18,10 +18,6 @@ pipelines:
                    command: make
                    arguments:
                     - build_commit
-      - Publish:
-          jobs:
-            publish:
-              tasks:
                - exec:
                    command: make
                    arguments:
