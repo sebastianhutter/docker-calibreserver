@@ -23,3 +23,10 @@ push_commit:
 # push the build containers
 push_latest:
 	docker push $(IMAGE_NAME):latest
+
+# deploy commit id image to rancher
+deploy_commit:
+	/bin/bash -c "source /var/go/.rancher; \
+	  gaucho.py upgrade $(SERVICE_ID_1) --imageUuid docker:$(IMAGE_NAME):$(COMMIT_ID) --auto_complete"
+	/bin/bash -c "source /var/go/.rancher; \
+	  gaucho.py upgrade $(SERVICE_ID_2) --imageUuid docker:$(IMAGE_NAME):$(COMMIT_ID) --auto_complete"

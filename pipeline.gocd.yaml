@@ -5,6 +5,11 @@ pipelines:
     materials:
       repository:
         git: git@github.com:sebastianhutter/docker-calibreserver.git
+    environment_variables:
+      RANCHER_URL: http://rancher.hutter.cloud:8080
+      # you can get the service id from the api view in rancher
+      SERVICE_ID_1: 1s14
+      SERVICE_ID_2: 1s25
     stages:
       - Build:
           jobs:
@@ -26,3 +31,11 @@ pipelines:
                    command: make
                    arguments:
                     - push_commit
+      - Deploy:
+          jobs:
+            deploy:
+              tasks:
+               - exec:
+                  command: make
+                  arguments:
+                   - deploy_commit
