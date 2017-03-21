@@ -6,7 +6,7 @@ pipelines:
       repository:
         git: git@github.com:sebastianhutter/docker-calibreserver.git
     environment_variables:
-      RANCHER_URL: http://rancher.hutter.cloud:8080
+      RANCHER_URL: https://rancher.hutter.cloud:8080
       # you can get the service id from the api view in rancher
       SERVICE_ID_1: 1s14
       SERVICE_ID_2: 1s25
