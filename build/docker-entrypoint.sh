@@ -4,7 +4,7 @@
 # the help of environment variables
 
 # set the cli parameters
-CLI_PARAM=" --with-library ${LIBRARY_PATH} --auto-reload --max-cover ${MAX_COVER} --port 80"
+CLI_PARAM=" --with-library ${LIBRARY_PATH} --auto-reload --max-cover ${MAX_COVER} --port 80 --develop -t 120"
 
 # if username and password are set start
 # the calibre server password protected
