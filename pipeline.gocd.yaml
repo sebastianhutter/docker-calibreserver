@@ -35,7 +35,7 @@ pipelines:
                    command: make
                    arguments:
                     - push_commit
-  Deploy_checkhttp:
+  Deploy_calibreserver:
     group: calibreserver
     materials:
       build:
