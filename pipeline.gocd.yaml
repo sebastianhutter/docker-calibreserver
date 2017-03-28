@@ -7,13 +7,17 @@ pipelines:
         git: git@github.com:sebastianhutter/docker-calibreserver.git
     environment_variables:
       RANCHER_URL: https://rancher.hutter.cloud:8080
-      # you can get the service id from the api view in rancher
       SERVICE_NAME_1: calibre-privat
       SERVICE_NAME_2: calibre-david
     stages:
       - Build:
           jobs:
             build:
+              artifacts:
+               - build:
+                   source: image_version
+               - build:
+                   source: image_name
               tasks:
                - exec:
                    command: make
@@ -31,11 +35,35 @@ pipelines:
                    command: make
                    arguments:
                     - push_commit
+  Deploy_checkhttp:
+    group: calibreserver
+    materials:
+      build:
+        pipeline: Build_calibreserver
+        stage: build
+    environment_variables:
+      RANCHER_URL: https://rancher.hutter.cloud:8080
+      SERVICE_NAME_1: calibre-privat
+      SERVICE_NAME_2: calibre-david
+    stages:
       - Deploy:
           jobs:
             deploy:
               tasks:
-               - exec:
-                  command: make
-                  arguments:
-                   - deploy_commit
+               - fetch:
+                  pipeline: Build_calibreserver
+                  stage: build
+                  job: build
+                  is_file: yes
+                  source: image_version
+               - fetch:
+                  pipeline: Build_calibreserver
+                  stage: build
+                  job: build
+                  is_file: yes
+                  source: image_name
+               - script: |
+                   export image_version=$(cat image_version)
+                   export image_name=$(cat image_name)
+                   rancher_upgrade.sh ${SERVICE_NAME_1} ${image_name} ${image_version}
+                   rancher_upgrade.sh ${SERVICE_NAME_2} ${image_name} ${image_version}

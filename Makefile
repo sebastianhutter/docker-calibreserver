@@ -3,13 +3,17 @@ IMAGE_NAME = sebastianhutter/calibreserver
 
 # if the go label is set overwrite the commit id env variable
 ifneq ($(GO_PIPELINE_LABEL),"")
+ifneq ($(COMMIT_ID),"")
 export COMMIT_ID := $(GO_PIPELINE_LABEL)
+endif
 endif
 
 # build
 # build a new docker image
 build_commit:
 	docker build -t $(IMAGE_NAME):$(COMMIT_ID) .
+	echo $(COMMIT_ID) > image_version
+	echo $(IMAGE_NAME) > image_name
 
 # latest
 # set the latest tag for the image with the specified nextcloud version tag
