@@ -4,7 +4,7 @@
 # the help of environment variables
 
 # set the cli parameters
-CLI_PARAM=" --port=80 --auto-reload"
+CLI_PARAM=" --port=80"
 
 # set path to userdb - have a look at:
 # https://manual.calibre-ebook.com/server.html#managing-user-accounts-from-the-command-line-only
