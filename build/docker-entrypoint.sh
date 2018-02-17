@@ -57,6 +57,7 @@ load_secret PREFIX_URL ${PREFIX_URL}
 load_secret WATCH_PATH ${WATCH_PATH}
 load_secret INTERVAL ${INTERVAL}
 load_secret LIBRARY_ID ${LIBRARY_ID}
+load_secret ONEBOOKPERDIR ${ONEBOOKPERDIR}
 
 # set path to userdb - have a look at:
 # https://manual.calibre-ebook.com/server.html#managing-user-accounts-from-the-command-line-only
@@ -78,7 +79,7 @@ if [ -n "${WATCH_PATH}" ]; then
     [ -z "${LIBRARY_ID}" ] && LIBRARY_ID=$(basename ${LIBRARY_PATH})
 
     log "execute watch.sh"
-    WATCH_PATH=${WATCH_PATH} LIBRARY_ID=${LIBRARY_ID} INTERVAL=${INTERVAL} /watch.sh &
+    ONEBOOKPERDIR=${ONEBOOKPERDIR} WATCH_PATH=${WATCH_PATH} LIBRARY_ID=${LIBRARY_ID} INTERVAL=${INTERVAL} /watch.sh &
 
     # get the pid of the watch.sh process
     WATCH_PID=$!

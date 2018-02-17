@@ -9,6 +9,7 @@ The containers behaviour can be influenced with the following environment variab
 - LIBRARY_PATH: Path to the calibre library folder (default: '/library')
 - WATCH_PATH: Folder to watch for new ebooks (default: empty)
 - INTERVAL: Interval to scan the watched directory for new ebooks (default: 60)
+- ONEBOOKPERDIR: if this environment variable is set to ANY value the calibredb command will run with [add-one-book-per-directory](https://manual.calibre-ebook.com/generated/en/calibredb.html#cmdoption-calibredb-add-one-book-per-directory) set.
 - LIBRARY_ID: The id of the library to update (default: basename of LIBRARY_PATH)
 - USERDB: path to the user database (default: empty)
 - PREFIX_URL: url prefix for the webservice - necessary for reverse proxy setup (default: empty)

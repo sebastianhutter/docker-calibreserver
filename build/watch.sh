@@ -21,7 +21,10 @@ trap "{ log 'received  signal. stopping'; exit 1; }" SIGHUP SIGINT SIGTERM
 
 # set the cli to execute
 LIBRARY="http://127.0.0.1/#${LIBRARY_ID}"
-CLI="/usr/bin/calibredb add --recurse --with-library=${LIBRARY} ${WATCH_PATH}"
+CLI="/usr/bin/calibredb add --recurse --with-library=${LIBRARY}"
+# if one book per directory var is not empty set the parameter
+[ -n "${ONEBOOKPERDIR}" ] && CLI="${CLI} --one-book-per-directory"
+CLI="${CLI} ${WATCH_PATH}"
 
 log "start calibre watcher - watching dir '${WATCH_PATH}', adding books to '${LIBRARY}'"
 while true
