@@ -1,11 +1,12 @@
-FROM debian:jessie
+FROM debian:stable-slim
 
 # install requirements
 # download calibre installer
 # install calibre
-RUN apt-get update && \
-    apt-get install -y python curl xvfb imagemagick xz-utils && \
-    bash -c "curl https://raw.githubusercontent.com/kovidgoyal/calibre/master/setup/linux-installer.py | python -c \"import sys; main=lambda:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main()\""
+RUN apt-get update \
+    && apt-get install -y python curl xvfb imagemagick xz-utils \
+    && bash -c "curl https://raw.githubusercontent.com/kovidgoyal/calibre/master/setup/linux-installer.py | python -c \"import sys; main=lambda:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main()\"" \
+    && rm -rf /var/lib/apt/lists/*
 
 # prepare environment
 WORKDIR /
