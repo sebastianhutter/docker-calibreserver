@@ -1,10 +1,62 @@
 #!/bin/bash
 
-# start the calibreserver with
-# the help of environment variables
+##
+# FUNCTIONS
+## 
 
-# set the cli parameters
-CLI_PARAM=" --port=80"
+function load_secret {
+    # function checks if specified environment variable contains the file path to a docker secret
+    # if so it overwrite the value with the file contents
+
+    # first parameter is the environment variable name 
+    name=${1}
+    # second parameter is the value of the environment variable
+    value=${2}
+
+    # now check if the value equals a file in the container
+    if [ -f "${value}" ]; then
+        export ${name}=$(cat "${value}")
+    fi
+}
+
+function log {
+    echo "$(date) docker-entrypoint.sh - ${@}"
+}
+
+function _term {
+    log "received sigterm. aborting."
+    log "send sigterm to calibre ${CALIBRE_PID}"
+    kill -TERM ${CALIBRE_PID} 2>/dev/null
+
+    if [ -n "${WATCH_PID}" ]; then
+        log "send sigterm to watch script ${WATCH_PID}"
+        kill -TERM ${WATCH_PID} 2>/dev/null
+    fi
+
+    log "all prcoesses stopped. bye"
+    exit 0
+}
+
+##
+# TRAP
+##
+
+trap _term SIGTERM
+
+##
+# VARIABLES
+##
+
+# set the default parameters
+CLI_PARAM=" --port=80 --pidfile=/tmp/calibre.pid --daemonize --log=/dev/stdout"
+
+# load values - either from env or from specified file (for docker secrets)
+load_secret LIBRARY_PATH ${LIBRARY_PATH}
+load_secret USERDB ${USERDB}
+load_secret PREFIX_URL ${PREFIX_URL}
+load_secret WATCH_PATH ${WATCH_PATH}
+load_secret INTERVAL ${INTERVAL}
+load_secret LIBRARY_ID ${LIBRARY_ID}
 
 # set path to userdb - have a look at:
 # https://manual.calibre-ebook.com/server.html#managing-user-accounts-from-the-command-line-only
@@ -13,7 +65,39 @@ CLI_PARAM=" --port=80"
 # if the URL_PREFIX is set set it
 [ -n "${PREFIX_URL}" ] && CLI_PARAM="${CLI_PARAM} --url-prefix=${PREFIX_URL}"
 
+# if the watch path is set we need to add some config and run the watch.sh script
+if [ -n "${WATCH_PATH}" ]; then
+    log "watch directory is set. preparing for watch.sh run"
+
+    # enable local write for the calibre server
+    CLI_PARAM="${CLI_PARAM} --enable-local-write"
+    
+    # check if interval is set. if not set it to 60 sec
+    [ -z "${INTERVAL}" ] && INTERVAL=60
+    # check if the library id is set - if not set it to the basename of the library_path
+    [ -z "${LIBRARY_ID}" ] && LIBRARY_ID=$(basename ${LIBRARY_PATH})
+
+    log "execute watch.sh"
+    WATCH_PATH=${WATCH_PATH} LIBRARY_ID=${LIBRARY_ID} INTERVAL=${INTERVAL} /watch.sh &
+
+    # get the pid of the watch.sh process
+    WATCH_PID=$!
+    log "watch.sh started with PID ${WATCH_PID}"
+fi
+
 # start the calibre server
-echo Starting calibre server with this cli parameters:
-echo $CLI_PARAM
-exec /usr/bin/calibre-server $CLI_PARAM ${LIBRARY_PATH}
+log "Starting calibre server with this cli parameters: $CLI_PARAM"
+/usr/bin/calibre-server $CLI_PARAM ${LIBRARY_PATH}
+
+# get the calibre pid
+CALIBRE_PID=$(cat /tmp/calibre.pid)
+log "calibre server running with pid ${CALIBRE_PID}"
+
+
+while true
+do
+    # now we just wait until we receive a sigterm
+    sleep 3 &    # This script is not really doing anything.
+    wait $!
+done
+
