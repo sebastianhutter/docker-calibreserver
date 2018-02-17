@@ -11,7 +11,8 @@ RUN apt-get update \
 # prepare environment
 WORKDIR /
 ADD build/docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+ADD build/watch.sh /watch.sh
+RUN chmod +x /docker-entrypoint.sh /watch.sh
 
 # the default library path
 ENV LIBRARY_PATH /library
