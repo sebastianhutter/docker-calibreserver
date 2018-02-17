@@ -4,23 +4,24 @@
 # FUNCTIONS
 ## 
 
-
 function log {
     echo "$(date) watch.sh - ${@}"
 }
 
 ##
-# VARIABLES
+# TRAP
 ##
 
-echo ${LIBRARY_ID}
+trap "{ log 'received  signal. stopping'; exit 1; }" SIGHUP SIGINT SIGTERM
+
+
+##
+# VARIABLES
+##
 
 # set the cli to execute
 LIBRARY="http://127.0.0.1/#${LIBRARY_ID}"
 CLI="/usr/bin/calibredb add --recurse --with-library=${LIBRARY} ${WATCH_PATH}"
-
-# set trap for signales
-trap "{ log 'received  signal. stopping'; exit 1; }" SIGHUP SIGINT SIGTERM
 
 log "start calibre watcher - watching dir '${WATCH_PATH}', adding books to '${LIBRARY}'"
 while true
