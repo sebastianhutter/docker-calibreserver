@@ -10,3 +10,10 @@ pipeline:
     secrets: [ docker_username, docker_password ]
     when:
       branch: [master]
+
+  slack:
+    image: plugins/slack
+    webhook: https://hooks.slack.com/services/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
+    channel: ci-messages
+    when:
+      status: [ success, failure ]
