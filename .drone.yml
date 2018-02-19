@@ -15,5 +15,6 @@ pipeline:
     image: plugins/slack
     webhook: https://hooks.slack.com/services/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
     channel: ci-messages
+    icon_url: https://drone.hutter.cloud:8443/favicon.png
     when:
       status: [ success, failure ]
