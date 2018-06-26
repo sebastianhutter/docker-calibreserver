@@ -8,6 +8,13 @@ RUN apt-get update \
     && bash -c "curl https://raw.githubusercontent.com/kovidgoyal/calibre/master/setup/linux-installer.py | python -c \"import sys; main=lambda:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main()\"" \
     && rm -rf /var/lib/apt/lists/*
 
+# install gosu
+ENV GOSU_VERSION 1.10
+RUN dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
+  && curl -L "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" -o /usr/local/bin/gosu  \
+  && chmod +x  /usr/local/bin/gosu
+
+
 # prepare environment
 WORKDIR /
 ADD build/docker-entrypoint.sh /docker-entrypoint.sh
