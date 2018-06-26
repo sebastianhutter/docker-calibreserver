@@ -24,6 +24,9 @@ function log {
 }
 
 function _term {
+    # check for given parameters - first parameter = exit value
+    retval=${1}
+    [ -z ${retval} ] && retval=0
     log "received sigterm. aborting."
     log "send sigterm to calibre ${CALIBRE_PID}"
     kill -TERM ${CALIBRE_PID} 2>/dev/null
@@ -34,7 +37,7 @@ function _term {
     fi
 
     log "all prcoesses stopped. bye"
-    exit 0
+    exit ${retval}
 }
 
 ##
@@ -91,6 +94,10 @@ log "Starting calibre server with this cli parameters: $CLI_PARAM"
 /usr/bin/calibre-server $CLI_PARAM ${LIBRARY_PATH}
 
 # get the calibre pid
+if [ ! -f /tmp/calibre.pid ]; then
+    log "calibre pid file not found. aborting"
+    _term 1
+fi
 CALIBRE_PID=$(cat /tmp/calibre.pid)
 log "calibre server running with pid ${CALIBRE_PID}"
 
