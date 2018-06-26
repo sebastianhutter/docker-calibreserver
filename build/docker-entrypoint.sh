@@ -92,7 +92,8 @@ if [ -n "${WATCH_PATH}" ]; then
     [ -z "${LIBRARY_ID}" ] && LIBRARY_ID=$(basename ${LIBRARY_PATH})
 
     log "execute watch.sh"
-    ONEBOOKPERDIR=${ONEBOOKPERDIR} WATCH_PATH=${WATCH_PATH} LIBRARY_ID=${LIBRARY_ID} INTERVAL=${INTERVAL} /watch.sh &
+    ONEBOOKPERDIR=${ONEBOOKPERDIR} WATCH_PATH=${WATCH_PATH} LIBRARY_ID=${LIBRARY_ID} INTERVAL=${INTERVAL} \
+        gosu ${UID}:${GID} /watch.sh &
 
     # get the pid of the watch.sh process
     WATCH_PID=$!
@@ -101,7 +102,7 @@ fi
 
 # start the calibre server
 log "Starting calibre server with this cli parameters: $CLI_PARAM"
-/usr/bin/calibre-server $CLI_PARAM ${LIBRARY_PATH}
+gosu ${UID}:${GID} /usr/bin/calibre-server $CLI_PARAM ${LIBRARY_PATH}
 
 # get the calibre pid
 if [ ! -f /tmp/calibre.pid ]; then
