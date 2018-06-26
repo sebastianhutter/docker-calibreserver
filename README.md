@@ -13,6 +13,8 @@ The containers behaviour can be influenced with the following environment variab
 - LIBRARY_ID: The id of the library to update (default: basename of LIBRARY_PATH)
 - USERDB: path to the user database (default: empty)
 - PREFIX_URL: url prefix for the webservice - necessary for reverse proxy setup (default: empty)
+- UID: uid the calibre server is running as (default: 1000)
+- GID: gid the calibre server is running as (default: 1000)
 
 The listening port of the service is always TCP 8080.
 
