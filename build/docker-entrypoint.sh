@@ -51,7 +51,7 @@ trap _term SIGTERM
 ##
 
 # set the default parameters
-CLI_PARAM=" --port=80 --pidfile=/tmp/calibre.pid --daemonize --log=/dev/stdout"
+CLI_PARAM=" --port=8080 --pidfile=/tmp/calibre.pid --daemonize --log=/dev/stdout"
 
 # load values - either from env or from specified file (for docker secrets)
 load_secret LIBRARY_PATH ${LIBRARY_PATH}
