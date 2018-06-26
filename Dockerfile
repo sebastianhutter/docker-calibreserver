@@ -19,12 +19,21 @@ RUN dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
 WORKDIR /
 ADD build/docker-entrypoint.sh /docker-entrypoint.sh
 ADD build/watch.sh /watch.sh
+# create config directory for calibre
+RUN mkdir /.config
 RUN chmod +x /docker-entrypoint.sh /watch.sh
 
 # the default library path
 ENV LIBRARY_PATH /library
 # the max size for covers
 ENV MAX_COVER 300x400
+
+# add calibre user
+ENV UID 1000
+ENV GID 1000
+
+RUN addgroup --system --gid ${GID} calibre \
+  && adduser --system --no-create-home --uid ${UID} --gid ${GID} calibre 
 
 # run the docker entrypoint script
 ENTRYPOINT ["/docker-entrypoint.sh"]
