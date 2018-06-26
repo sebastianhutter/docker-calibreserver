@@ -62,6 +62,16 @@ load_secret INTERVAL ${INTERVAL}
 load_secret LIBRARY_ID ${LIBRARY_ID}
 load_secret ONEBOOKPERDIR ${ONEBOOKPERDIR}
 
+# make sure unprivileged users can write to stdout
+# https://github.com/DE-IBH/bird-lg-docker/commit/7a0f5cc0d444b1f3a17010997a1080b4de1b44ca
+chmod o+w /dev/stdout
+
+# set permissions for the library, userdb and watch path
+chown -R ${UID}:${GID} /.config
+chown -R ${UID}:${GID} ${LIBRARY_PATH}
+[ -n "${USERDB}" ] && chown -R ${UID}:${GID} ${USERDB}
+[ -n "${WATCH_PATH}" ] && chown -R ${UID}:${GID} ${WATCH_PATH}
+
 # set path to userdb - have a look at:
 # https://manual.calibre-ebook.com/server.html#managing-user-accounts-from-the-command-line-only
 [ -n "${USERDB}" ] && CLI_PARAM="${CLI_PARAM} --enable-auth --userdb=${USERDB}"
